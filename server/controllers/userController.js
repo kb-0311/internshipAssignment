@@ -1,7 +1,7 @@
 const ErrorHandler = require("../utils/errorHandler");
 const catchAsyncErrors = require ("../middleware/catchAsyncErros.js") ;
 const User = require("../models/userModels");
-const Product = require("../models/productModel");
+const Movie = require("../models/moviesModel");
 const sendToken = require("../utils/jwtToken");
 const { sendEmail } = require("../utils/sendEmail");
 const crypto = require ("crypto");
@@ -198,84 +198,6 @@ exports.updateProfile = catchAsyncErrors( async (req , res , next) =>{
     })
 })
 
-// Get all users (admin)
 
-exports.getAllUsers = catchAsyncErrors( async (req , res , next) =>{
-
-    const allUsers = await User.find();
-    const userCount = await User.countDocuments();
-
-    res.status(200).json({
-        success : true ,
-        userCount ,
-        allUsers
-    })
-})
-
-// Get a single user (admin)
-
-exports.getSingleUser = catchAsyncErrors( async (req , res , next) =>{
-
-    const user = await User.findById(req.params.id);
-
-    if (!user) {
-        return next(new ErrorHandler("User does not exist " , 404));
-    }
-
-
-
-    res.status(200).json({
-        success : true ,
-        user
-    })
-})
-
-// update a single user role as an admin
-
-exports.updateUser = catchAsyncErrors( async (req , res , next) =>{
-
-    const newUserData = {
-        name :req.body.name ,
-        email : req.body.email ,
-        role : req.body.role
-        
-    }
-
-    
-    const user = await User.findByIdAndUpdate(req.params.id , newUserData , {
-        new : true ,
-        runValidators : true ,
-        useFindandModify : false 
-    });
-
-
-    res.status(200).json({
-        success : true ,
-        message : "profile updated succesfully" ,
-        user
-    })
-})
-
-// delete a single user as an admin
-
-exports.deleteUser = catchAsyncErrors( async (req , res , next) =>{
-
-    
-
-    
-    const user = await User.findByIdAndUpdate(req.params.id);
-
-    if (!user) {
-        return next(new ErrorHandler("User does not exist " , 404));
-    }
-
-    await user.remove();
-
-    res.status(200).json({
-        success : true ,
-        message : "user deleted succesfully" ,
-        
-    })
-})
 
 

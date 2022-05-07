@@ -1,4 +1,4 @@
-const Movie = require("../models/movieModels") ;
+const Movie = require("../models/moviesModel") ;
 const ErrorHandler = require("../utils/errorHandler");
 const catchAsyncErrors = require ("../middleware/catchAsyncErros.js") ;
 const ApiFeatures = require ("../utils/apifeatures");

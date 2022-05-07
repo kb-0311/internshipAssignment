@@ -21,7 +21,7 @@ class ApiFeatures {
     filter () {
         const queryCopy = {...this.querystr}
 
-        //remove some fields from a category 
+        //remove some fields from a genre
 
         const removeFields = ["keyword" , "page" , "limit"];
 
