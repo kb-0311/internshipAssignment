@@ -3,6 +3,24 @@ const ErrorHandler = require("../utils/errorHandler");
 const catchAsyncErrors = require ("../middleware/catchAsyncErros.js") ;
 const ApiFeatures = require ("../utils/apifeatures");
 
+
+exports.createMovie = catchAsyncErrors (async (req ,res , next)=>{
+    const { name , description , genre} = req.body ;
+    const user = req.user.id;
+    const movie = {
+        name :name,
+        description : description,
+        genre:genre,
+        user :user
+    }
+    const movieCreated = await Movie.create(movie);
+    res.status(200).json({
+        success : true ,
+        movie : movieCreated
+    })
+
+})
+
 // Getting all Movies 
 exports.getAllMovies = catchAsyncErrors( async (req , res) =>{
     const resultPerPage = 5;
@@ -46,7 +64,7 @@ exports.getMovieDetails = catchAsyncErrors( async (req , res , next) =>{
 
 
 
-// Create tool review or Update tool review 
+// Create review 
 
 exports.createMovieReview = catchAsyncErrors( async (req , res , next) =>{
 

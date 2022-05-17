@@ -17,14 +17,6 @@ const movieSchema = new mongoose.Schema({
         type : String ,
         required : [true , "Please Enter Genre for the movie"]
     } ,
-    Stock : {
-        type : Number , 
-        required : [true , "Please enter the stock"] ,
-        maxLength : [4 , "stocks cannot exceed 9999" ],
-        minLength : [1 , "stocks can only be positive numbers"] ,
-        default : 1 ,
-
-    } ,
     numOfReviews : {
         type : Number ,
         default : 0 
@@ -67,4 +59,4 @@ const movieSchema = new mongoose.Schema({
 
 })
 
-module.exports = mongoose.model("Product" , movieSchema);
+module.exports = mongoose.model("Movie" , movieSchema);
