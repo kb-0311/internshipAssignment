@@ -7,7 +7,7 @@ class ReviewHistory {
     search () {
         const keyword = this.querystr.keyword ? { 
         
-            user : {
+            name : {
                 $regex : this.querystr.keyword ,
                 $options : "i",
             }
