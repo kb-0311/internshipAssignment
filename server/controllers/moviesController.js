@@ -93,7 +93,14 @@ exports.createMovieReview = catchAsyncErrors( async (req , res , next) =>{
     }
 
     const Movie = await Movie.findById(MovieId);
-    const addedReviewToHistory = await History.create(reviewToBeAddedInHistory);
+    let addedReviewToHistory;
+    
+    if (Movie) {
+        addedReviewToHistory = await History.create(reviewToBeAddedInHistory);
+
+    } else {
+        return next ( new ErrorHandler("invalid movie Id, movie not found" , 404));
+    }
 
 
     const isReviewed = Movie.reviews.find(rev=>rev.user.toString()===req.user._id.toString());
