@@ -1,7 +1,9 @@
 const Movie = require("../models/moviesModel") ;
+const History = require("../models/historyModel.js");
 const ErrorHandler = require("../utils/errorHandler");
 const catchAsyncErrors = require ("../middleware/catchAsyncErros.js") ;
 const ApiFeatures = require ("../utils/apifeatures");
+const ReviewHistory = require( "../utils/reviewHistory")
 
 
 exports.createMovie = catchAsyncErrors (async (req ,res , next)=>{
@@ -80,6 +82,8 @@ exports.createMovieReview = catchAsyncErrors( async (req , res , next) =>{
     }
 
     const Movie = await Movie.findById(MovieId);
+    const addedReviewToHistory = await History.create(review);
+
 
     const isReviewed = Movie.reviews.find(rev=>rev.user.toString()===req.user._id.toString());
     let message = ""
@@ -111,7 +115,8 @@ exports.createMovieReview = catchAsyncErrors( async (req , res , next) =>{
 
      res.status(200).json({
          success : true ,
-         message : message
+         message : message,
+         systemMessage : addedReviewToHistory,
      })
         
 })
@@ -131,5 +136,17 @@ exports.getAllReviewsForSingleMovie = catchAsyncErrors ( async (req ,res , next)
         success : true ,
         message : `here are all the reviews for the tool id: ${Movie._id} ` ,
         reviewsForTheSearchedUtility
+    })
+})
+
+
+exports.getTheEntireHistoryOfReviewsIntheSystem = catchAsyncErrors(async (req , res , next)=>{
+    const reviewHistory = new  ReviewHistory(History.find() , req.query).search();
+
+    const searchedReviewHistory = await reviewHistory.query;
+    
+    res.status(200).json({
+        message : "Here is the complete history" ,
+        history :searchedReviewHistory
     })
 })
