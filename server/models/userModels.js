@@ -12,6 +12,18 @@ const userSchema = new mongoose.Schema({
         minLength : [4 , "name cannot be less than 4 characters"]
 
     } ,
+    age : {
+        type : Number,
+        required : [true , "please enter your age"],
+        min:13,
+        max : 99
+    },
+    favouriteMovies : {
+        type : String , 
+        required : [true , "Please enter a few favourite movies"] ,
+        maxLength : [50 , "Movie name cannot exceed more than 50 characters"] ,
+        minLength : [1 , "Movie name cannot be less than 1 characters"]
+    },
     email : {
         type : String , 
         required : [true , "Please enter valid  email"] ,
