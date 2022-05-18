@@ -1,6 +1,11 @@
 const mongoose= require("mongoose");
 
 const historySchema = new mongoose.Schema({
+    movieId : {
+        type : mongoose.Schema.ObjectId ,
+        ref : "Movie",
+        required : true,
+    } ,
     user : {
         type:mongoose.Schema.ObjectId ,
         ref : "User",

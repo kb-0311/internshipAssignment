@@ -1,5 +1,6 @@
 const Movie = require("../models/moviesModel") ;
 const History = require("../models/historyModel.js");
+const User = require("../models/userModels")
 const ErrorHandler = require("../utils/errorHandler");
 const catchAsyncErrors = require ("../middleware/catchAsyncErros.js") ;
 const ApiFeatures = require ("../utils/apifeatures");
@@ -79,10 +80,20 @@ exports.createMovieReview = catchAsyncErrors( async (req , res , next) =>{
         comment : comment ,
 
 
+    } ;
+    const reviewToBeAddedInHistory = {
+
+        movieId : MovieId,
+        user : req.user._id ,
+        name : req.user.name ,
+        rating : Number(rating) ,
+        comment : comment ,
+        
+
     }
 
     const Movie = await Movie.findById(MovieId);
-    const addedReviewToHistory = await History.create(review);
+    const addedReviewToHistory = await History.create(reviewToBeAddedInHistory);
 
 
     const isReviewed = Movie.reviews.find(rev=>rev.user.toString()===req.user._id.toString());
