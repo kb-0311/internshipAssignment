@@ -81,21 +81,23 @@ exports.createMovieReview = catchAsyncErrors( async (req , res , next) =>{
 
 
     } ;
-    const reviewToBeAddedInHistory = {
-
-        movieId : MovieId,
-        user : req.user._id ,
-        name : req.user.name ,
-        rating : Number(rating) ,
-        comment : comment ,
-        
-
-    }
-
-    const Movie = await Movie.findById(MovieId);
-    let addedReviewToHistory;
     
-    if (Movie) {
+
+    const movie = await Movie.findById(MovieId);
+    let addedReviewToHistory;
+    let reviewToBeAddedInHistory ;
+    
+    if (movie) {
+        reviewToBeAddedInHistory = {
+
+            movieId : MovieId,
+            user : req.user._id ,
+            name : req.user.name ,
+            rating : Number(rating) ,
+            comment : comment ,
+            
+    
+        }
         addedReviewToHistory = await History.create(reviewToBeAddedInHistory);
 
     } else {
@@ -103,10 +105,10 @@ exports.createMovieReview = catchAsyncErrors( async (req , res , next) =>{
     }
 
 
-    const isReviewed = Movie.reviews.find(rev=>rev.user.toString()===req.user._id.toString());
+    const isReviewed = movie.reviews.find(rev=>rev.user.toString()===req.user._id.toString());
     let message = ""
     if (isReviewed) {
-        Movie.reviews.forEach(rev =>{
+        movie.reviews.forEach(rev =>{
             if(rev.user.toString()===req.user._id.toString()) {
                 rev.rating=rating ,
                 rev.comment=comment
@@ -115,21 +117,21 @@ exports.createMovieReview = catchAsyncErrors( async (req , res , next) =>{
         message = "review updated successfully"
         
     } else {
-        Movie.reviews.push(review);
+        movie.reviews.push(review);
         
         message = "review added successfully"
     }
-    Movie.numOfReviews = Movie.reviews.length;
+    Movie.numOfReviews = movie.reviews.length;
 
     let avgerageRating = 0 ;
 
-    Movie.reviews.forEach(rev =>{
+    movie.reviews.forEach(rev =>{
         avgerageRating+=rev.rating
     })
 
-    Movie.ratings = Number (avgerageRating/Movie.reviews.length);
+    movie.ratings = Number (avgerageRating/movie.reviews.length);
 
-     await Movie.save({validateBeforeSave : false});
+     await movie.save({validateBeforeSave : false});
 
      res.status(200).json({
          success : true ,
@@ -143,23 +145,23 @@ exports.createMovieReview = catchAsyncErrors( async (req , res , next) =>{
 
 exports.getAllReviewsForSingleMovie = catchAsyncErrors ( async (req ,res , next)=>{
 
-    const Movie = await Movie.findById(req.query.id) ;
-    if (!Movie) {
+    const movie = await Movie.findById(req.query.id) ;
+    if (!movie) {
         return  next(new ErrorHandler("Movie not found" , 404));
     }
 
-    const reviewsForTheSearchedUtility = Movie.reviews ;
+    const reviewsForTheSearchedUtility = movie.reviews ;
 
     res.status(200).json({
         success : true ,
-        message : `here are all the reviews for the tool id: ${Movie._id} ` ,
+        message : `here are all the reviews for the tool id: ${movie._id} ` ,
         reviewsForTheSearchedUtility
     })
 })
 
 
 exports.getTheEntireHistoryOfReviewsIntheSystem = catchAsyncErrors(async (req , res , next)=>{
-    const reviewHistory = new  ReviewHistory(History.find() , req.query).search();
+    const reviewHistory = new ReviewHistory (History.find() , req.query).search();
 
     const searchedReviewHistory = await reviewHistory.query;
     
